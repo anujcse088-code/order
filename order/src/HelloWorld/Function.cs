@@ -1,8 +1,7 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Net.Http;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
@@ -12,21 +11,63 @@ using Amazon.Lambda.APIGatewayEvents;
 
 namespace HelloWorld;
 
-public class Function{
-
-    public APIGatewayProxyResponse FunctionHandler(APIGatewayProxyRequest apigProxyEvent, ILambdaContext context)
+public class Function
+{
+    public async Task<APIGatewayProxyResponse> FunctionHandler(APIGatewayProxyRequest apigProxyEvent, ILambdaContext context)
     {
-
         Console.WriteLine("Order function activated...");
         Console.WriteLine($"Order received: {apigProxyEvent.Body}");
 
-        Console.WriteLine($"Order function completed");
-
-        return new APIGatewayProxyResponse
+        if (string.IsNullOrWhiteSpace(apigProxyEvent.Body))
         {
-            Body = "Order received successfully.",
-            StatusCode = 200,
-            Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
-        };
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(new { error = "Missing order payload" }),
+                StatusCode = 400,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
+
+        try
+        {
+            using var document = JsonDocument.Parse(apigProxyEvent.Body);
+            var root = document.RootElement;
+
+            if (!root.TryGetProperty("orderId", out var orderIdElement) || !root.TryGetProperty("orderDate", out var orderDateElement))
+            {
+                return new APIGatewayProxyResponse
+                {
+                    Body = JsonSerializer.Serialize(new { error = "Order payload must include orderId and orderDate" }),
+                    StatusCode = 400,
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+
+            var responseBody = JsonSerializer.Serialize(new
+            {
+                orderId = orderIdElement.GetString(),
+                orderDate = orderDateElement.GetString()
+            });
+
+            Console.WriteLine("Order function completed");
+
+            return new APIGatewayProxyResponse
+            {
+                Body = responseBody,
+                StatusCode = 200,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
+        catch (JsonException ex)
+        {
+            Console.WriteLine($"Invalid order payload: {ex.Message}");
+
+            return new APIGatewayProxyResponse
+            {
+                Body = JsonSerializer.Serialize(new { error = "Invalid JSON payload" }),
+                StatusCode = 400,
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
+        }
     }
 }

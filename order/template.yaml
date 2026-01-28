@@ -10,7 +10,7 @@ Globals:
     MemorySize: 512
 
 Resources:
-  HelloWorldFunction:
+  ReadItOrderFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: ./src/HelloWorld/
@@ -26,19 +26,19 @@ Resources:
         HelloWorld:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /hello
-            Method: get
+            Path: /order
+            Method: post
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  HelloWorldApi:
-    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/hello/"
-  HelloWorldFunction:
-    Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
-  HelloWorldFunctionIamRole:
-    Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+  ReadItOrderApi:
+    Description: "API Gateway endpoint URL for Prod stage for the ReadIt Order function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/readit/order"
+  ReadItOrderFunction:
+    Description: "ReadIt Order Lambda Function ARN"
+    Value: !GetAtt ReadItOrderFunction.Arn
+  ReadItOrderFunctionIamRole:
+    Description: "Implicit IAM Role created for ReadIt Order function"
+    Value: !GetAtt ReadItOrderFunctionRole.Arn

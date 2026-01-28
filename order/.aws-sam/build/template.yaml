@@ -8,10 +8,10 @@ Globals:
     Timeout: 10
     MemorySize: 512
 Resources:
-  HelloWorldFunction:
+  ReadItOrderFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: HelloWorldFunction
+      CodeUri: ReadItOrderFunction
       Handler: HelloWorld::HelloWorld.Function::FunctionHandler
       Runtime: dotnet8
       Architectures:
@@ -24,24 +24,24 @@ Resources:
         HelloWorld:
           Type: Api
           Properties:
-            Path: /hello
-            Method: get
+            Path: /order
+            Method: post
     Metadata:
-      SamResourceId: HelloWorldFunction
+      SamResourceId: ReadItOrderFunction
 Outputs:
-  HelloWorldApi:
-    Description: API Gateway endpoint URL for Prod stage for Hello World function
+  ReadItOrderApi:
+    Description: API Gateway endpoint URL for Prod stage for the ReadIt Order function
     Value:
-      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/hello/
-  HelloWorldFunction:
-    Description: Hello World Lambda Function ARN
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/readit/order
+  ReadItOrderFunction:
+    Description: ReadIt Order Lambda Function ARN
     Value:
       Fn::GetAtt:
-      - HelloWorldFunction
+      - ReadItOrderFunction
       - Arn
-  HelloWorldFunctionIamRole:
-    Description: Implicit IAM Role created for Hello World function
+  ReadItOrderFunctionIamRole:
+    Description: Implicit IAM Role created for ReadIt Order function
     Value:
       Fn::GetAtt:
-      - HelloWorldFunctionRole
+      - ReadItOrderFunctionRole
       - Arn

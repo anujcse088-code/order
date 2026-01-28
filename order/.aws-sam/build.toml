@@ -5,9 +5,9 @@ codeuri = "C:\\Projects\\AWS\\order\\order\\src\\HelloWorld"
 runtime = "dotnet8"
 architecture = "x86_64"
 handler = "HelloWorld::HelloWorld.Function::FunctionHandler"
-source_hash = "e60f27812cc728676f040308bc3d8e7aebe7652890e33d8b72e6cfaa4dcd440b"
+source_hash = "baf9d90d6420c878b0f31defa248738e9310ad5fbb4057be9ac7242c07e52fd9"
 manifest_hash = ""
 packagetype = "Zip"
-functions = ["HelloWorldFunction"]
+functions = ["ReadItOrderFunction"]
 
 [layer_build_definitions]
