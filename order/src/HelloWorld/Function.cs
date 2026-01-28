@@ -46,7 +46,8 @@ public class Function
             var responseBody = JsonSerializer.Serialize(new
             {
                 orderId = orderIdElement.GetString(),
-                orderDate = orderDateElement.GetString()
+                orderDate = orderDateElement.GetString(),
+                message = "Order processed successfully"
             });
 
             Console.WriteLine("Order function completed");
